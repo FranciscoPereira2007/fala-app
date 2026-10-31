@@ -71,12 +71,14 @@ struct DotBlob: View {
             let t = tl.date.timeIntervalSinceReferenceDate
             ZStack {
                 ForEach(0..<3) { i in
-                    let wob = sin(t * (1.3 + Double(i) * 0.4) + Double(i)) * 0.06
+                    let wob: CGFloat = CGFloat(sin(t * (1.3 + Double(i) * 0.4) + Double(i)) * 0.06)
                     let spin = thinking ? t * 40 * Double(i + 1) : t * 8
+                    let width: CGFloat = size * (0.8 + 0.25 * level + wob)
+                    let height: CGFloat = size * (0.76 + 0.2 * level - wob)
                     Ellipse()
                         .fill(RadialGradient(colors: [Color(red: 0.62, green: 0.75, blue: 1), Color(red: 0.25, green: 0.4, blue: 1).opacity(0.85)],
                                              center: .topLeading, startRadius: 4, endRadius: size * 0.7))
-                        .frame(width: size * (0.8 + 0.25 * level + wob), height: size * (0.76 + 0.2 * level - wob))
+                        .frame(width: width, height: height)
                         .rotationEffect(.degrees(spin + Double(i) * 50))
                         .opacity(i == 0 ? 1 : 0.35)
                         .blur(radius: i == 0 ? 0 : 14)
