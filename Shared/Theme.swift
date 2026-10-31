@@ -42,7 +42,7 @@ struct WavePill: View {
             HStack(spacing: 3) {
                 ForEach(0..<12, id: \.self) { i in
                     let seed = abs(sin(Double(i) * 1.7))
-                    Capsule().frame(width: 3, height: active ? 5 + CGFloat(level) * 22 * seed + 3 : 4)
+                    Capsule().frame(width: 3, height: active ? 5 + CGFloat(level) * 22 * CGFloat(seed) + 3 : 4)
                 }
             }
             Image(systemName: "checkmark").font(.system(size: 11, weight: .bold)).opacity(active || done ? 1 : 0)

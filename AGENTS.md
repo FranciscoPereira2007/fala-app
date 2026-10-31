@@ -10,6 +10,8 @@ changes. Personal signing belongs in local Xcode settings, never in project.yml.
 Shared keychain groups must derive AppIdentifierPrefix from the built app.
 CI must explicitly select Xcode 26 or newer: the runner's default Xcode 16.4
 cannot compile SpeechAnalyzer even when runtime availability checks are present.
+Keep SwiftUI waveform frame arithmetic in CGFloat: explicitly convert Double
+seeds, as mixed multiplication is ambiguous under the Xcode 26.3 compiler.
 
 Keep AVCaptureSession work and preview-layer release off the main thread. Native
 lifecycle/build changes need independent review. Test production regressions with
