@@ -30,7 +30,7 @@ As funções dependem da plataforma e das permissões concedidas. Claude Code/Co
 
 ## Compilar Mac e iOS
 
-Requer macOS, Xcode com os SDKs adequados e [XcodeGen](https://github.com/yonaskolb/XcodeGen).
+Requer macOS, **Xcode 26 ou superior** (SDK com SpeechAnalyzer) e [XcodeGen](https://github.com/yonaskolb/XcodeGen).
 
 ```sh
 brew install xcodegen

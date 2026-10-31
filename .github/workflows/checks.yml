@@ -7,6 +7,9 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
+      - name: Select the SDK required by SpeechAnalyzer
+        run: sudo xcode-select --switch /Applications/Xcode_26.3.app/Contents/Developer
+      - run: xcodebuild -version
       - run: brew install xcodegen
       - run: xcodegen generate
       - name: Full Mac app
