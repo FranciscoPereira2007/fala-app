@@ -1,0 +1,8 @@
+.gradle/
+build/
+app/build/
+local.properties
+*.apk
+interop/linkcrypto
+.kotlin/
+app/src/main/assets/model-pt/

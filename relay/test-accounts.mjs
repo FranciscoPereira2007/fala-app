@@ -1,0 +1,27 @@
+// Contas contra `wrangler dev --var FALA_TEST:1` (porta 8787): login, juntar/atualizar/apagar computador, 2.º iPhone, logout, apagar conta.
+const B = process.argv[2] || "http://127.0.0.1:8787";
+let fail = 0; const check = (c, n) => { console.log((c ? "OK   " : "FALHA ") + n); if (!c) fail++; };
+const post = (p, b, s, m = "POST") => fetch(B + p, { method: m, headers: { "content-type": "application/json", ...(s ? { Authorization: "Bearer " + s } : {}) }, body: b ? JSON.stringify(b) : undefined }).then(async (r) => ({ s: r.status, j: await r.json() }));
+const sub = "test:" + Math.random();
+let r = await post("/a/login", { token: "lixo" });
+check(r.s === 401, "token da Apple falso recusado");
+r = await post("/a/login", { token: sub }); const s1 = r.j.session;
+check(r.s === 200 && s1 && r.j.devices.length === 0, "login: sessão nova, sem computadores");
+r = await post("/a/device", { id: "a".repeat(32), kind: "pc", name: "PC de casa", code: "ABCDEFGHJKLMNPQRSTUVWXYZ23", lan: "192.168.1.9:47900" }, s1);
+check(r.s === 200 && r.j.devices.length === 1 && r.j.devices[0].kind === "pc", "juntar o PC");
+r = await post("/a/device", { id: "a".repeat(32), kind: "pc", name: "PC escritório", code: "ABCDEFGHJKLMNPQRSTUVWXYZ23" }, s1);
+check(r.j.devices.length === 1 && r.j.devices[0].name === "PC escritório", "o mesmo PC atualiza, não duplica");
+r = await post("/a/device", { id: "zz", kind: "pc", code: "x" }, s1);
+check(r.s === 400, "computador inválido recusado");
+r = await post("/a/login", { token: sub }); const s2 = r.j.session;
+check(r.j.devices.length === 1 && s2 !== s1, "2.º iPhone com a mesma conta recebe o PC");
+r = await post("/a/devices", null, s1.split(".")[0] + ".errado", "GET");
+check(r.s === 401, "sessão forjada recusada");
+r = await post("/a/devices", null, (await post("/a/login", { token: "test:outra" + Math.random() })).j.session, "GET");
+check(r.j.devices.length === 0, "outra conta não vê os computadores desta");
+await post("/a/logout", {}, s1);
+check((await post("/a/devices", null, s1, "GET")).s === 401, "logout termina só essa sessão");
+check((await post("/a/devices", null, s2, "GET")).s === 200, "a outra sessão continua");
+await post("/a/account", null, s2, "DELETE");
+check((await post("/a/devices", null, s2, "GET")).s === 401, "apagar conta: tudo apagado");
+console.log(fail ? fail + " FALHAS" : "TUDO OK"); process.exit(fail ? 1 : 0);

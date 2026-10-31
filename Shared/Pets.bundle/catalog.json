@@ -1,0 +1,142 @@
+[
+  {
+    "id": "fala-jarvis",
+    "name": "Jarvis",
+    "isNew": false
+  },
+  {
+    "id": "fala-raposa",
+    "name": "Raposa",
+    "isNew": false
+  },
+  {
+    "id": "fala-robo",
+    "name": "Robô",
+    "isNew": false
+  },
+  {
+    "id": "fala-coelho",
+    "name": "Coelho",
+    "isNew": false
+  },
+  {
+    "id": "fala-rebento",
+    "name": "Rebento",
+    "isNew": false
+  },
+  {
+    "id": "fala-urso",
+    "name": "Urso",
+    "isNew": false
+  },
+  {
+    "id": "fala-sapo",
+    "name": "Sapo",
+    "isNew": false
+  },
+  {
+    "id": "fala-gato-azul",
+    "name": "Gato azul",
+    "isNew": false
+  },
+  {
+    "id": "fala-antena",
+    "name": "Antena",
+    "isNew": false
+  },
+  {
+    "id": "fala-coelho-castanho",
+    "name": "Coelho castanho",
+    "isNew": false
+  },
+  {
+    "id": "fala-rebento-branco",
+    "name": "Rebento branco",
+    "isNew": false
+  },
+  {
+    "id": "fala-gato-cinzento",
+    "name": "Gato cinzento",
+    "isNew": false
+  },
+  {
+    "id": "fala-axolote",
+    "name": "Axolote",
+    "isNew": true
+  },
+  {
+    "id": "fala-tartaruga",
+    "name": "Tartaruga",
+    "isNew": true
+  },
+  {
+    "id": "fala-caracol",
+    "name": "Caracol",
+    "isNew": true
+  },
+  {
+    "id": "fala-baleia",
+    "name": "Baleia",
+    "isNew": true
+  },
+  {
+    "id": "fala-morcego",
+    "name": "Morcego",
+    "isNew": true
+  },
+  {
+    "id": "fala-ourico",
+    "name": "Ouriço",
+    "isNew": true
+  },
+  {
+    "id": "fala-coala",
+    "name": "Coala",
+    "isNew": true
+  },
+  {
+    "id": "fala-panda",
+    "name": "Panda",
+    "isNew": true
+  },
+  {
+    "id": "fala-morango",
+    "name": "Morango",
+    "isNew": true
+  },
+  {
+    "id": "fala-cato",
+    "name": "Cato",
+    "isNew": true
+  },
+  {
+    "id": "fala-estrela",
+    "name": "Estrela",
+    "isNew": true
+  },
+  {
+    "id": "fala-lua",
+    "name": "Lua",
+    "isNew": true
+  },
+  {
+    "id": "fala-alforreca",
+    "name": "Alforreca",
+    "isNew": true
+  },
+  {
+    "id": "fala-pintainho",
+    "name": "Pintainho",
+    "isNew": true
+  },
+  {
+    "id": "fala-guaxinim",
+    "name": "Guaxinim",
+    "isNew": true
+  },
+  {
+    "id": "fala-lontra",
+    "name": "Lontra",
+    "isNew": true
+  }
+]

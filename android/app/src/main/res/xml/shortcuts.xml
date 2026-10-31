@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Carregar no ícone da Fala (ou "Ok Google, abre Ligar ao Jarvis"): liga à última sessão, como o atalho da Siri. -->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut android:shortcutId="call" android:enabled="true" android:icon="@mipmap/ic_launcher"
+        android:shortcutShortLabel="@string/call_short" android:shortcutLongLabel="@string/call_long">
+        <intent android:action="android.intent.action.VIEW" android:targetPackage="com.fran.fala.android"
+            android:targetClass="com.fran.fala.MainActivity" android:data="fala://call" />
+    </shortcut>
+</shortcuts>

@@ -1,0 +1,54 @@
+name: Source checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  apple:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - run: brew install xcodegen
+      - run: xcodegen generate
+      - name: Full Mac app
+        run: xcodebuild -project Fala.xcodeproj -scheme FalaMac -destination 'platform=macOS' CODE_SIGNING_ALLOWED=NO build
+      - name: Full iOS app, keyboard and widgets
+        run: xcodebuild -project Fala.xcodeproj -scheme Fala -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO ONLY_ACTIVE_ARCH=YES ARCHS=arm64 build
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m compileall -q pc-node
+      - run: python pc-node/test_sessions_images.py
+  relay:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: '1.3.11'
+      - run: npm ci
+        working-directory: relay
+      - name: Start isolated test worker
+        working-directory: relay
+        run: npx wrangler dev --local --ip 127.0.0.1 --port 8798 --var FALA_TEST:1 > /tmp/fala-relay.log 2>&1 &
+      - name: Wait for local worker
+        run: |
+          python3 - <<'PY'
+          import time, urllib.request
+          for attempt in range(30):
+              try:
+                  urllib.request.urlopen('http://127.0.0.1:8798', timeout=2)
+                  break
+              except Exception:
+                  time.sleep(1)
+          else:
+              raise SystemExit('Local worker did not start')
+          PY
+      - run: bun relay/test.mjs http://127.0.0.1:8798
+      - run: node relay/test-accounts.mjs http://127.0.0.1:8798

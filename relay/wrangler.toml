@@ -1,0 +1,23 @@
+name = "fala-relay"
+main = "src/index.js"
+compatibility_date = "2025-09-01"
+
+# Site estático (index.html + img/). O que não é ficheiro cai no Worker (relay, contas, /privacidade, /suporte).
+[assets]
+directory = "./site/public"
+
+[[durable_objects.bindings]]
+name = "ROOM"
+class_name = "Room"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["Room"]
+
+[[durable_objects.bindings]]
+name = "ACCOUNT"
+class_name = "Account"
+
+[[migrations]]
+tag = "v2"
+new_sqlite_classes = ["Account"]

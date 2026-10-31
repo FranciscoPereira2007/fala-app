@@ -1,0 +1,10 @@
+{
+  "name": "fala-relay",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --local",
+    "test:accounts": "node test-accounts.mjs http://127.0.0.1:8798"
+  },
+  "devDependencies": {"wrangler": "4.76.0"}
+}

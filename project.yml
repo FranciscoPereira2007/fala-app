@@ -1,0 +1,122 @@
+name: Fala
+options:
+  bundleIdPrefix: com.fran.fala
+  developmentLanguage: pt-PT
+  deploymentTarget: { iOS: "18.0", macOS: "14.0" }
+packages:
+  WhisperKit:
+    url: https://github.com/argmaxinc/WhisperKit
+    exactVersion: 1.1.1
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    CODE_SIGN_STYLE: Automatic
+    GENERATE_INFOPLIST_FILE: YES
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "13" # o último enviado foi o 12: subir sempre antes de arquivar
+targets:
+  Fala:
+    type: application
+    platform: iOS
+    sources: [Shared, iOS]
+    info:
+      path: iOS/Info.plist
+      properties:
+        NSBonjourServices: [_fala._tcp]
+        UIAppFonts: [EBGaramond.ttf, EBGaramond-Italic.ttf, Figtree.ttf]
+        CFBundleURLTypes: [{CFBundleURLSchemes: [fala]}]
+        UIBackgroundModes: [audio] # sem voip: as chamadas foram cortadas (o voip sem VoIP real é rejeição 2.5.4)
+        NSSupportsLiveActivities: true
+        ITSAppUsesNonExemptEncryption: false # só CryptoKit (cifra do sistema, isenta)
+        CFBundleLocalizations: [pt-PT, en, fr, es]
+        AppIdentifierPrefix: $(AppIdentifierPrefix)
+        # CarPlay: conversa por voz com as sessões (entitlement Voice Based Conversation).
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: true
+          UISceneConfigurations:
+            CPTemplateApplicationSceneSessionRoleApplication:
+              - UISceneClassName: CPTemplateApplicationScene
+                UISceneConfigurationName: CarPlay
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).CarPlaySceneDelegate
+    dependencies:
+      - target: FalaKeyboard
+      - target: FalaWidgets
+      - package: WhisperKit
+        product: WhisperKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.fran.fala.ios
+        CODE_SIGN_ENTITLEMENTS: iOS/Fala.entitlements # Porta-chaves partilhado com o widget (CarPlay)
+        SWIFT_ACTIVE_COMPILATION_CONDITIONS: "$(inherited) FALA_APP"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: "Para ouvires a tua voz e transformá-la em texto."
+        INFOPLIST_KEY_NSCameraUsageDescription: "Para tirares uma foto e a mandares no chat."
+        INFOPLIST_KEY_NSSpeechRecognitionUsageDescription: "Para mostrar o texto enquanto falas. A transcrição corre no teu iPhone."
+        INFOPLIST_KEY_NSLocalNetworkUsageDescription: "Para enviar o texto para o teu Mac."
+        INFOPLIST_KEY_NSBonjourServices: "_fala._tcp"
+        INFOPLIST_KEY_NSSupportsLiveActivities: YES
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight" # rodar só no ecrã remoto (FalaOrientation)
+        INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight" # iPad: todas (multitarefa)
+      configs:
+        # CarPlay requires an entitlement approved for your own Apple developer team.
+        Debug:
+          CODE_SIGN_STYLE: Automatic
+  FalaWidgets:
+    type: app-extension
+    platform: iOS
+    sources: [Widgets, Shared/DictationActivity.swift, Shared/FalaGroup.swift, Shared/FalaIntents.swift, Shared/MacSender.swift, Shared/Link.swift, Shared/LinkCrypto.swift, Shared/AudioCodec.swift, Shared/Jarvis.swift]
+    info:
+      path: Widgets/Info.plist
+      properties:
+        CFBundleDisplayName: Fala
+        AppIdentifierPrefix: $(AppIdentifierPrefix)
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.fran.fala.ios.widgets
+        CODE_SIGN_ENTITLEMENTS: Widgets/Widgets.entitlements
+  FalaKeyboard:
+    type: app-extension
+    platform: iOS
+    sources: [Keyboard, Shared/AppGroup.swift, Shared/KeyboardBridge.swift, Shared/FlowWaveform.swift]
+    info:
+      path: Keyboard/Info.plist
+      properties:
+        CFBundleDisplayName: Fala
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.keyboard-service
+          NSExtensionPrincipalClass: $(PRODUCT_MODULE_NAME).KeyboardViewController
+          NSExtensionAttributes: {RequestsOpenAccess: true, PrimaryLanguage: pt-PT, IsASCIICapable: false, PrefersRightToLeft: false}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.fran.fala.ios.keyboard
+  FalaMac:
+    type: application
+    platform: macOS
+    sources: [Shared, Mac]
+    dependencies:
+      - package: WhisperKit
+        product: WhisperKit
+    info:
+      path: Mac/Info.plist
+      properties:
+        NSBonjourServices: [_fala._tcp]
+        AppIdentifierPrefix: $(AppIdentifierPrefix)
+        ITSAppUsesNonExemptEncryption: false
+        CFBundleLocalizations: [pt-PT, en, fr, es]
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.fran.fala.mac
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        PRODUCT_NAME: Fala
+        CODE_SIGN_IDENTITY: "Apple Development"
+        INFOPLIST_KEY_NSMicrophoneUsageDescription: "Para ouvires a tua voz e transformá-la em texto."
+        INFOPLIST_KEY_NSCameraUsageDescription: "Para tirares uma foto e a mandares no chat."
+        INFOPLIST_KEY_NSSpeechRecognitionUsageDescription: "A transcrição corre no teu Mac."
+        INFOPLIST_KEY_NSLocalNetworkUsageDescription: "Para receber texto do teu iPhone."
+        INFOPLIST_KEY_NSBonjourServices: "_fala._tcp"
+        ENABLE_HARDENED_RUNTIME: YES # para notarizar (download direto com Developer ID)
+        CODE_SIGN_ENTITLEMENTS: Mac/Fala.entitlements
+        INFOPLIST_KEY_NSAppleEventsUsageDescription: "Para escrever nas tuas sessões do Claude e do Codex no Terminal."

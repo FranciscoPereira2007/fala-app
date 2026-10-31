@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="call_short">Ligar ao Jarvis</string>
+    <string name="call_long">Ligar ao Jarvis (última sessão)</string>
+</resources>
